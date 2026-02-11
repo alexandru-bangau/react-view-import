@@ -1,0 +1,55 @@
+{
+  "name": "react-view-import",
+  "version": "0.1.0",
+  "description": "Lazy import React components only when they enter the viewport — optimized for Next.js static exports.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "clean": "rm -rf dist node_modules"
+  },
+  "keywords": [
+    "react",
+    "lazy",
+    "inview",
+    "import",
+    "lazyload",
+    "viewport",
+    "performance",
+    "nextjs"
+  ],
+  "author": "Alexandru Bangau <alexandru.bangau@icloud.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexandru-bangau/react-view-import.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alexandru-bangau/react-view-import/issues"
+  },
+  "homepage": "https://github.com/alexandru-bangau/react-view-import#readme",
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0",
+    "react-intersection-observer": ">=9.13.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.3",
+    "react-intersection-observer": "^9.13.0",
+    "tsup": "^8.0.2",
+    "typescript": "^5.6.3"
+  }
+}

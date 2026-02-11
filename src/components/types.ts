@@ -1,0 +1,5 @@
+export enum LazyLoadState {
+  DEFAULT = 'DEFAULT',
+  LOADED_ON_MOUNT = 'LOADED_ON_MOUNT',
+  LAZY_ON_CONDITION = 'LAZY_ON_CONDITION',
+}

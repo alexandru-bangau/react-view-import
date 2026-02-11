@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2020", // Use modern JS output
+    "lib": [
+      "DOM",
+      "ES2020"
+    ], // Include browser + ES features
+    "module": "ESNext", // Use ES modules
+    "moduleResolution": "Node", // Standard module resolution
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true, // Strict TypeScript checking
+    "resolveJsonModule": true,
+    "declaration": true, // Generate .d.ts files
+    "declarationDir": "dist", // Put .d.ts in dist
+    "outDir": "dist", // Output JS to dist
+    "noEmit": false, // Allow emitting JS files
+    "jsx": "react-jsx", // Support React .tsx syntax
+    "baseUrl": "./src", // Optional: simplify imports
+    "isolatedModules": true // Needed for tsup
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
