@@ -1,6 +1,6 @@
 {
   "name": "react-view-import",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Lazy import React components only when they enter the viewport — optimized for Next.js static exports.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
