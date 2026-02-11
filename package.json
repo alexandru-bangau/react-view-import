@@ -28,13 +28,22 @@
     "lazyload",
     "viewport",
     "performance",
-    "nextjs"
+    "nextjs",
+    "intersection-observer",
+    "code-splitting",
+    "bundle-size",
+    "scroll",
+    "visibility",
+    "typescript",
+    "component",
+    "loading",
+    "optimization"
   ],
   "author": "Alexandru Bangau <alexandru.bangau@icloud.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/alexandru-bangau/react-view-import.git"
+    "url": "git+https://github.com/alexandru-bangau/react-view-import.git"
   },
   "bugs": {
     "url": "https://github.com/alexandru-bangau/react-view-import/issues"
