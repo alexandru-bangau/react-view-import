@@ -522,7 +522,6 @@ This package requires the following peer dependencies:
 
 - `react` >= 17.0.0
 - `react-dom` >= 17.0.0
-- `react-intersection-observer` >= 9.13.0
 
 ## 📄 License
 

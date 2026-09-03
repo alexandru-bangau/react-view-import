@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { InView } from 'react-intersection-observer'
 import { createLoadMap } from './createLoadMap'
+import { InView } from './InView'
 import { mergeRefs } from './mergeRefs'
 import { selectComponent } from './selectComponent'
 import {
@@ -27,7 +27,6 @@ export const UILazyInView = <T extends LazyComponentProps, TModule>({
 
   return (
     <InView
-      as="div"
       rootMargin={rootMargin}
       triggerOnce
       threshold={threshold}

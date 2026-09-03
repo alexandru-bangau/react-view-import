@@ -7,7 +7,7 @@ export default defineConfig({
   clean: true,
   minify: true,
   sourcemap: false,
-  external: ['react', 'react-dom', 'react-intersection-observer'],
+  external: ['react', 'react-dom'],
   // 👇 add this to ensure .tsx works for JSX
   esbuildOptions(options) {
     options.jsx = 'automatic'
