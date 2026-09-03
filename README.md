@@ -49,7 +49,6 @@ pnpm add react-view-import
 ```tsx
 import { UILazyInView } from "react-view-import";
 
-// For default exports: exportName="default"
 const HeavyComponent = () => <div>This component loads only when visible!</div>;
 export default HeavyComponent;
 
@@ -57,7 +56,7 @@ export default function App() {
   return (
     <UILazyInView
       importer={() => import("./HeavyComponent")}
-      exportName="default" // Use "default" for default exports
+      select={(module) => module.default}
       componentProps={{}}
     />
   );
@@ -69,19 +68,44 @@ export default function App() {
 ```tsx
 import { UILazyInView } from "react-view-import";
 
-// For named exports: exportName matches the export name
 export const MyComponent = ({ title }: { title: string }) => <div>{title}</div>;
 
 export default function App() {
   return (
     <UILazyInView
       importer={() => import("./components/MyComponent")}
-      exportName="MyComponent" // Use the exact export name
+      select={(module) => module.MyComponent}
       componentProps={{ title: "Hello" }}
     />
   );
 }
 ```
+
+### Backward Compatibility
+
+The `select` API is backward-compatible. Existing code using `exportName` continues to work without changes:
+
+```tsx
+<UILazyInView
+  importer={() => import("./PhoneField")}
+  exportName="PhoneField"
+  componentProps={phoneFieldProps}
+/>
+```
+
+You can migrate to the type-safe selector when convenient:
+
+```tsx
+<UILazyInView
+  importer={() => import("./PhoneField")}
+  select={(module) => module.PhoneField}
+  componentProps={phoneFieldProps}
+/>
+```
+
+Both forms use the same lazy dynamic import behavior. `select` is recommended for new code because TypeScript can validate the selected export and editors can recognize it as a real symbol reference.
+
+Use either `select` or `exportName`, not both. No immediate migration is required for existing consumers.
 
 ### With Custom Placeholder and Options
 
@@ -343,24 +367,29 @@ export const LazySection = ({ sectionId }) => (
 );
 ```
 
-#### Export Name Matching
+#### Selecting an Export
 
-**Important**: The `exportName` must exactly match how the component is exported:
+Use `select` to return the component from the imported module. The selector is type-safe, creates a static reference that editors can track, and works with function, arrow, and class components:
 
 ```tsx
-// ✅ Correct usage:
-
 // For default exports:
 export default MyComponent;
-// Use: exportName="default"
+<UILazyInView
+  importer={() => import("./MyComponent")}
+  select={(module) => module.default}
+  componentProps={{}}
+/>;
 
 // For named exports:
 export const MyComponent = () => <div />;
-// Use: exportName="MyComponent"
-
-export const ChartComponent = () => <div />;
-// Use: exportName="ChartComponent"
+<UILazyInView
+  importer={() => import("./MyComponent")}
+  select={(module) => module.MyComponent}
+  componentProps={{}}
+/>;
 ```
+
+The existing `exportName="MyComponent"` form remains supported for backward compatibility, but it cannot detect misspelled or unused exports during static analysis.
 
 #### Vite with Dynamic Imports
 
@@ -454,19 +483,22 @@ const importer = () => import("./HeavyComponent");
 
 ### UILazyInView Props
 
-| Prop              | Type                                                       | Default                 | Description                                                                                                                    |
-| ----------------- | ---------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `importer`        | `() => Promise<{ [key: string]: React.ComponentType<T> }>` | -                       | Function that returns a dynamic import promise                                                                                 |
-| `exportName`      | `string`                                                   | -                       | Name of the exported component from the module (use "default" for default exports, or the exact export name for named exports) |
-| `componentProps`  | `T`                                                        | -                       | Props to pass to the lazy-loaded component                                                                                     |
-| `threshold`       | `number`                                                   | `0.5`                   | IntersectionObserver threshold (0-1)                                                                                           |
-| `placeholder`     | `React.ReactNode`                                          | `null`                  | Component to show while loading                                                                                                |
-| `loadOnMount`     | `boolean`                                                  | `false`                 | Force load immediately on mount, regardless of viewport visibility                                                             |
-| `loadOnCondition` | `boolean`                                                  | `false`                 | Load when this boolean becomes true (enables sequential loading, click/hover triggers, dependency-based loading)               |
-| `forwardRef`      | `React.Ref<HTMLDivElement>`                                | -                       | Ref to forward to the wrapper div                                                                                              |
-| `onInView`        | `() => void`                                               | -                       | Callback when component enters viewport                                                                                        |
-| `rootMargin`      | `string`                                                   | `'1000px 0px'`          | IntersectionObserver root margin                                                                                               |
-| `loadState`       | `LazyLoadState`                                            | `LazyLoadState.DEFAULT` | Loading strategy (used internally with loadOnMount/loadOnCondition)                                                            |
+| Prop              | Type                                          | Default                 | Description                                                                                                      |
+| ----------------- | --------------------------------------------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `importer`        | `() => Promise<TModule>`                      | -                       | Function that returns a dynamic import promise                                                                   |
+| `select`          | `(module: TModule) => React.ComponentType<T>` | -                       | Type-safe selector for the component export                                                                      |
+| `exportName`      | `string`                                      | -                       | Legacy alternative to `select`; selects an export by its runtime string name                                     |
+| `componentProps`  | `T`                                           | -                       | Props to pass to the lazy-loaded component                                                                       |
+| `threshold`       | `number`                                      | `0.5`                   | IntersectionObserver threshold (0-1)                                                                             |
+| `placeholder`     | `React.ReactNode`                             | `null`                  | Component to show while loading                                                                                  |
+| `loadOnMount`     | `boolean`                                     | `false`                 | Force load immediately on mount, regardless of viewport visibility                                               |
+| `loadOnCondition` | `boolean`                                     | `false`                 | Load when this boolean becomes true (enables sequential loading, click/hover triggers, dependency-based loading) |
+| `forwardRef`      | `React.Ref<HTMLDivElement>`                   | -                       | Ref to forward to the wrapper div                                                                                |
+| `onInView`        | `() => void`                                  | -                       | Callback when component enters viewport                                                                          |
+| `rootMargin`      | `string`                                      | `'1000px 0px'`          | IntersectionObserver root margin                                                                                 |
+| `loadState`       | `LazyLoadState`                               | `LazyLoadState.DEFAULT` | Loading strategy (used internally with loadOnMount/loadOnCondition)                                              |
+
+One component selector is required: use the recommended `select` prop or the backward-compatible `exportName` prop.
 
 ### Loading Behavior
 
